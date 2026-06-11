@@ -1,0 +1,100 @@
+---
+title: API Reference
+description: Public types, defaults, result shape, and helper exports.
+---
+
+## `signInWithGoogleCredential(options)`
+
+Requests a Google credential from the current platform.
+
+```ts
+const credential = await signInWithGoogleCredential({
+  webClientId,
+  iosClientId,
+  nonce,
+  android: {
+    flow: 'sign-in-button',
+    accountFilter: 'authorized-first',
+    autoSelect: true,
+  },
+  web: {
+    autoSelect: true,
+    useFedCm: true,
+  },
+});
+```
+
+## Options
+
+```ts
+type GoogleCredentialOptions = {
+  webClientId: string;
+  iosClientId?: string | null;
+  nonce?: string | null;
+  android?: {
+    flow?: 'credential' | 'sign-in-button';
+    accountFilter?: 'all' | 'authorized-first';
+    autoSelect?: boolean;
+  };
+  web?: {
+    autoSelect?: boolean;
+    useFedCm?: boolean;
+  };
+};
+```
+
+## Defaults
+
+```ts
+android.flow = 'sign-in-button';
+android.accountFilter = 'authorized-first';
+android.autoSelect = true;
+web.autoSelect = true;
+web.useFedCm = true;
+```
+
+## Result
+
+```ts
+type GoogleCredentialResult = {
+  idToken: string;
+  displayName: string | null;
+  email: string | null;
+  familyName: string | null;
+  givenName: string | null;
+  id: string | null;
+  phoneNumber: string | null;
+  profilePictureUri: string | null;
+};
+```
+
+Only `idToken` is security-critical. Other fields are convenience metadata.
+
+## Helpers
+
+```ts
+import {
+  clearGoogleCredentialState,
+  isGoogleCredentialAvailable,
+  signInWithGoogleCredential,
+} from '@pricava/react-native-google-credential';
+```
+
+`isGoogleCredentialAvailable()` returns whether the current runtime can attempt
+Google credential sign-in.
+
+`clearGoogleCredentialState()` clears or disables saved credential state when
+the platform supports it.
+
+## Platform-specific option behavior
+
+| Option | Android | iOS | Web |
+| --- | --- | --- | --- |
+| `webClientId` | Required | Required | Required |
+| `iosClientId` | Ignored | Required unless bundled | Ignored |
+| `nonce` | Supported | Supported | Supported |
+| `android.flow` | Supported | Ignored | Ignored |
+| `android.accountFilter` | Supported | Ignored | Ignored |
+| `android.autoSelect` | Supported | Ignored | Ignored |
+| `web.autoSelect` | Ignored | Ignored | Supported |
+| `web.useFedCm` | Ignored | Ignored | Supported |

@@ -1,0 +1,59 @@
+---
+title: Troubleshooting
+description: Common Google sign-in failures and how to diagnose them.
+---
+
+## Web: `unregistered_origin`
+
+The current browser origin is not listed under Authorized JavaScript origins for
+the OAuth Web client ID.
+
+Fix:
+
+1. Log the exact `window.location.origin`.
+2. Add that exact origin to Google Cloud Console.
+3. Add `http://localhost` for local development.
+4. Save changes and wait for propagation.
+5. Hard refresh the app.
+
+## Web: GIS script cannot load
+
+Check network access to:
+
+```text
+https://accounts.google.com/gsi/client
+```
+
+Browser extensions, ad blockers, or corporate network rules can block it.
+
+## iOS: missing `iosClientId`
+
+iOS requires an iOS OAuth client ID. Provide `iosClientId`, write `GIDClientID`
+to `Info.plist`, or bundle `GoogleService-Info.plist`.
+
+## iOS: redirect does not return to app
+
+Check that the reversed iOS client ID URL scheme is registered in `Info.plist`.
+If using Expo, verify the config plugin ran and rebuild the native app.
+
+## Android: no credential found
+
+If `android.accountFilter` is `"authorized-first"`, the package falls back to
+all accounts when Android returns no credential. If sign-in still fails, check:
+
+- Google Play Services availability.
+- Correct package name.
+- Correct SHA fingerprints.
+- The OAuth Web client ID passed as `webClientId`.
+
+## Android: installed app mismatch
+
+Google validates the installed app's package name and signing certificate. Add
+debug, release, and Play app signing fingerprints to Google/Firebase.
+
+## Expo: works on web but not device
+
+Expo web only exercises the web implementation. Device builds need native setup
+and a rebuilt app.
+
+Use a development build, not Expo Go.

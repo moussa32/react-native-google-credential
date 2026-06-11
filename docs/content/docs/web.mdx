@@ -1,0 +1,75 @@
+---
+title: Web
+description: Google Identity Services setup, local origins, FedCM, and web-specific errors.
+---
+
+## Native implementation
+
+Web loads Google Identity Services on demand:
+
+```text
+https://accounts.google.com/gsi/client
+```
+
+It initializes GIS with:
+
+```ts
+{
+  client_id: webClientId,
+  nonce,
+  auto_select: web.autoSelect,
+  use_fedcm_for_prompt: web.useFedCm
+}
+```
+
+## Authorized JavaScript origins
+
+Google checks the exact origin of the page. These are different origins:
+
+```text
+http://localhost:8081
+http://127.0.0.1:8081
+http://localhost:8082
+```
+
+Add every origin you use to the OAuth Web client's Authorized JavaScript origins.
+
+## FedCM
+
+FedCM prompt support is enabled by default:
+
+```ts
+web: {
+  useFedCm: true
+}
+```
+
+You can turn it off if you need to debug older GIS behavior:
+
+```ts
+web: {
+  useFedCm: false
+}
+```
+
+## Auto-select
+
+```ts
+web: {
+  autoSelect: true
+}
+```
+
+Allows Google Identity Services to auto-select an account when eligible.
+
+## `unregistered_origin`
+
+This means the current page origin is not authorized for the Web client ID you
+passed as `webClientId`.
+
+Check:
+
+- The app is using the same Web client ID shown in Google Cloud Console.
+- The exact browser origin is listed in Authorized JavaScript origins.
+- You clicked Save in Google Cloud Console.
+- You waited for Google configuration propagation.

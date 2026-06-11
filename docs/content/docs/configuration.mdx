@@ -1,0 +1,65 @@
+---
+title: Google Configuration
+description: Configure Google OAuth clients for Android, iOS, web, and auth providers.
+---
+
+## OAuth Web client
+
+Create a Google OAuth Web client in the same Google Cloud project used by your
+auth provider.
+
+Use its client ID as:
+
+```ts
+webClientId
+```
+
+This value is used as the Google ID token audience across Android, iOS, and web.
+
+## Web client secret
+
+Never ship the Web client secret in a mobile or web app. If you use Supabase,
+place the Web client ID and secret in Supabase's Google provider settings.
+
+## iOS client
+
+Create an iOS OAuth client for your app bundle identifier. You need:
+
+- iOS OAuth client ID.
+- Reversed iOS client ID URL scheme.
+
+The package can receive `iosClientId` at runtime, and the Expo plugin can write
+the client ID and URL scheme into `Info.plist`.
+
+## Android configuration
+
+Register:
+
+- Android package name.
+- Debug signing SHA-1/SHA-256.
+- Release signing SHA-1/SHA-256.
+- Google Play app signing SHA-1/SHA-256 when applicable.
+
+Android verifies the installed app identity using these values.
+
+## Web origins
+
+Google Identity Services validates the exact page origin.
+
+For local development, register both bare localhost and the ported origins you
+use:
+
+```text
+http://localhost
+http://localhost:8081
+http://localhost:8082
+http://127.0.0.1:8081
+http://127.0.0.1:8082
+```
+
+Add production origins as well:
+
+```text
+https://your-domain.com
+https://www.your-domain.com
+```

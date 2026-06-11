@@ -1,0 +1,84 @@
+---
+title: Android
+description: Android Credential Manager behavior, flow options, signing fingerprints, and setup notes.
+---
+
+## Native implementation
+
+Android uses AndroidX Credential Manager with Google ID credentials.
+
+The package maps:
+
+```ts
+webClientId
+```
+
+to Google's native:
+
+```kotlin
+setServerClientId(...)
+```
+
+The public API uses `webClientId` because the value you provide is the OAuth Web
+client ID.
+
+## Flow modes
+
+```ts
+android: {
+  flow: 'sign-in-button'
+}
+```
+
+Uses `GetSignInWithGoogleOption`, intended for an explicit "Sign in with Google"
+button.
+
+```ts
+android: {
+  flow: 'credential'
+}
+```
+
+Uses `GetGoogleIdOption`, the regular Google ID credential flow.
+
+## Account filtering
+
+```ts
+android: {
+  accountFilter: 'authorized-first'
+}
+```
+
+Starts with accounts that previously authorized the app. If Android returns no
+credential, the native implementation falls back to all Google accounts and
+turns off auto-select for that fallback request.
+
+```ts
+android: {
+  accountFilter: 'all'
+}
+```
+
+Starts with all eligible Google accounts.
+
+## Auto-select
+
+```ts
+android: {
+  autoSelect: true
+}
+```
+
+Allows Android to skip the account picker when exactly one eligible credential is
+available and Google decides it is safe to auto-select.
+
+## Required Google setup
+
+Register every signing certificate that can produce an installed app:
+
+- Debug keystore.
+- Release keystore.
+- Google Play app signing certificate.
+
+If the package name or signing fingerprint does not match Google Console, Android
+sign-in can fail even when the Web client ID is correct.

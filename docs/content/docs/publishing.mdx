@@ -1,0 +1,43 @@
+---
+title: Publishing
+description: Package contents, monorepo layout, and release checklist.
+---
+
+## Monorepo layout
+
+```text
+react-native-google-credential/
+  packages/
+    google-credential/
+  apps/
+    example/
+  docs/
+```
+
+Only `packages/google-credential` should be published to npm.
+
+## Package contents
+
+The package uses a `files` whitelist so docs, build output, and workspace
+artifacts are not published.
+
+Check before publishing:
+
+```bash
+pnpm --filter @pricava/react-native-google-credential pack --dry-run
+```
+
+## Recommended release flow
+
+1. Run package typecheck.
+2. Run docs build.
+3. Run package dry pack.
+4. Test in a real React Native or Expo development-build app.
+5. Publish a beta version.
+6. Promote to stable after Android, iOS, and web are verified.
+
+## Current note
+
+The package is React Native-first. Before a stable public release, verify the
+TurboModule/native module in a bare React Native app and an Expo development
+build.

@@ -1,0 +1,63 @@
+---
+title: Getting Started
+description: Install the package, configure Google OAuth clients, and request a Google ID token.
+---
+
+## Installation
+
+Install the package in your React Native or Expo development-build app:
+
+```bash
+pnpm add @pricava/react-native-google-credential
+```
+
+The package contains native code, so Expo Go is not supported. Use a custom
+development build or a prebuilt/native React Native app.
+
+## Required Google clients
+
+At minimum, create a Google OAuth Web client. The Web client ID is used on all
+platforms as the ID token audience.
+
+For iOS, also create an iOS OAuth client and register its reversed URL scheme.
+
+For Android, configure your package name and signing certificate fingerprints in
+Google Cloud or Firebase.
+
+## Basic usage
+
+```ts
+import { signInWithGoogleCredential } from "@pricava/react-native-google-credential";
+
+const credential = await signInWithGoogleCredential({
+  webClientId: process.env.GOOGLE_WEB_CLIENT_ID!,
+  iosClientId: process.env.GOOGLE_IOS_CLIENT_ID,
+});
+```
+
+## Recommended explicit options
+
+The defaults already match this example, but writing the options explicitly can
+make product behavior clearer:
+
+```ts
+const credential = await signInWithGoogleCredential({
+  webClientId,
+  iosClientId,
+  android: {
+    flow: "sign-in-button",
+    accountFilter: "authorized-first",
+    autoSelect: true,
+  },
+  web: {
+    autoSelect: true,
+    useFedCm: true,
+  },
+});
+```
+
+## Next step
+
+After receiving `credential.idToken`, exchange it with your auth provider or
+send it to your backend for verification. Do not treat decoded profile metadata
+as authorization proof.

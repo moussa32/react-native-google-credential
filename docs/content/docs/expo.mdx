@@ -1,0 +1,53 @@
+---
+title: Expo
+description: Expo development builds, config plugin usage, and native module support.
+---
+
+## Expo support
+
+This package contains native code. Use Expo development builds or prebuild.
+Expo Go is not expected to work.
+
+## Config plugin
+
+Add the plugin to your Expo config:
+
+```ts
+export default {
+  plugins: [
+    [
+      '@pricava/react-native-google-credential',
+      {
+        iosClientId: process.env.GOOGLE_IOS_CLIENT_ID,
+        iosUrlScheme: process.env.GOOGLE_IOS_URL_SCHEME,
+      },
+    ],
+  ],
+};
+```
+
+The plugin writes:
+
+- `GIDClientID` to `Info.plist` when `iosClientId` is provided.
+- The iOS URL scheme from `iosUrlScheme`, or derives it from `iosClientId`.
+
+The plugin also reads `GOOGLE_IOS_CLIENT_ID` and `GOOGLE_IOS_URL_SCHEME` from
+the environment when those props are omitted.
+
+## Runtime support
+
+Expo development builds use the same React Native TurboModule/native module as
+bare React Native apps. The Expo config plugin only handles iOS native
+configuration.
+
+## Rebuild after config changes
+
+Any native config change requires rebuilding the app:
+
+```bash
+npx expo prebuild
+npx expo run:ios
+npx expo run:android
+```
+
+For EAS builds, commit the config changes and trigger a new build.

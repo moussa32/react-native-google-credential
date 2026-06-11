@@ -1,0 +1,76 @@
+---
+title: Migration
+description: Move from the local Pricava module to the standalone package.
+---
+
+## Import paths
+
+Old local app import:
+
+```ts
+import { signInWithGoogleCredential } from '@/modules/pricava-google-credential';
+```
+
+New package import:
+
+```ts
+import { signInWithGoogleCredential } from '@pricava/react-native-google-credential';
+```
+
+Adapter import:
+
+```ts
+import { createSupabaseGoogleAuthAdapter } from '@pricava/react-native-google-credential/adapters';
+```
+
+## Option rename
+
+Use `webClientId`, not `serverClientId`:
+
+```ts
+signInWithGoogleCredential({
+  webClientId: process.env.GOOGLE_WEB_CLIENT_ID!,
+});
+```
+
+The native Android and iOS SDKs still use server-client terminology internally,
+but the public API names the credential you actually provide.
+
+## Boolean options
+
+Old:
+
+```ts
+useButtonFlow: true;
+filterByAuthorizedAccounts: true;
+autoSelectEnabled: true;
+```
+
+New:
+
+```ts
+android: {
+  flow: 'sign-in-button',
+  accountFilter: 'authorized-first',
+  autoSelect: true,
+},
+web: {
+  autoSelect: true,
+  useFedCm: true,
+}
+```
+
+## Expo plugin
+
+Move the local plugin configuration to the package plugin:
+
+```ts
+plugins: [
+  [
+    '@pricava/react-native-google-credential',
+    {
+      iosClientId: process.env.GOOGLE_IOS_CLIENT_ID,
+    },
+  ],
+];
+```

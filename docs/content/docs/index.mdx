@@ -1,0 +1,50 @@
+---
+title: Introduction
+description: Cross-platform Google credential sign-in for React Native and Expo apps.
+---
+
+React Native Google Credential provides one TypeScript API for acquiring Google
+ID tokens from Android, iOS, and web.
+
+The package currently wraps:
+
+- Android Credential Manager with Google ID credentials.
+- GoogleSignIn on iOS.
+- Google Identity Services on web.
+- An optional Expo config plugin for iOS setup.
+
+The core package stops at credential acquisition. It returns a Google ID token
+and profile metadata; your app or auth provider is responsible for exchanging
+or verifying that token.
+
+<Cards>
+  <Card title="Getting Started" href="/docs/getting-started" />
+  <Card title="API Reference" href="/docs/api-reference" />
+  <Card title="Expo Setup" href="/docs/expo" />
+  <Card title="Troubleshooting" href="/docs/troubleshooting" />
+</Cards>
+
+## Why this package exists
+
+Google sign-in is similar across platforms, but each platform names and exposes
+the flow differently:
+
+- Android calls the Web OAuth client ID a server client ID.
+- iOS uses both an iOS client ID and a server client ID.
+- Web validates the exact JavaScript origin for the OAuth Web client ID.
+
+This package gives application code a clearer model:
+
+```ts
+const credential = await signInWithGoogleCredential({
+  webClientId: process.env.GOOGLE_WEB_CLIENT_ID!,
+  iosClientId: process.env.GOOGLE_IOS_CLIENT_ID,
+});
+```
+
+## Current status
+
+This package is React Native-first. Android and iOS use a React Native
+TurboModule/native module, and Expo development builds use that same native
+module through React Native autolinking. Expo Go is not expected to work because
+the package needs native code.

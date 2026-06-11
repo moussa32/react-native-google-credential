@@ -1,0 +1,49 @@
+---
+title: Nonce And Security
+description: Use ID tokens safely and understand what profile fields mean.
+---
+
+## ID tokens
+
+The package returns a Google ID token. Your auth provider or backend should
+verify it.
+
+Verification should check at least:
+
+- Signature.
+- Issuer.
+- Audience, which should match `webClientId`.
+- Expiration.
+- Nonce, when your auth flow uses one.
+
+## Profile metadata
+
+The package also returns fields like `email`, `displayName`, and
+`profilePictureUri`.
+
+These fields are useful for display, but they are not a replacement for server
+side ID token verification.
+
+## Nonce flow
+
+The current adapter helper creates a nonce pair:
+
+1. Generate a random nonce.
+2. Hash it.
+3. Pass the hashed nonce to Google.
+4. Send the original nonce to the auth provider during ID token exchange.
+
+This lets the provider validate that the returned ID token belongs to the
+request your app started.
+
+## Secrets
+
+Do not ship:
+
+- OAuth Web client secret.
+- Service account keys.
+- Keystore passwords.
+- Production environment files.
+
+iOS client IDs, Android client IDs, and Web client IDs are not secrets, but they
+must still be configured correctly in Google Cloud.

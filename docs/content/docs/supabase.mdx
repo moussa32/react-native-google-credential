@@ -1,0 +1,65 @@
+---
+title: Supabase
+description: Exchange Google ID tokens with Supabase Auth.
+---
+
+## Provider configuration
+
+In Supabase, enable the Google provider:
+
+```text
+Authentication -> Providers -> Google
+```
+
+Use:
+
+- Client ID: OAuth Web client ID.
+- Client secret: OAuth Web client secret.
+
+Never put the Web client secret in your app.
+
+## Adapter helper
+
+The package includes an adapter factory:
+
+```ts
+import { createSupabaseGoogleAuthAdapter } from '@pricava/react-native-google-credential/adapters';
+```
+
+The adapter accepts a Google credential config and a function that exchanges the
+Google ID token with Supabase:
+
+```ts
+const signIn = createSupabaseGoogleAuthAdapter({
+  credentialOptions: {
+    webClientId,
+    iosClientId,
+  },
+  exchangeGoogleIdToken: async ({ idToken, nonce }) => {
+    return signInWithSupabaseGoogleIdToken({ idToken, nonce });
+  },
+});
+
+const session = await signIn();
+```
+
+## Supabase token exchange
+
+Supabase accepts Google ID tokens through:
+
+```text
+/auth/v1/token?grant_type=id_token
+```
+
+with:
+
+```json
+{
+  "provider": "google",
+  "id_token": "...",
+  "nonce": "..."
+}
+```
+
+The exact implementation belongs in your app or backend integration layer. The
+package core only acquires the Google credential.

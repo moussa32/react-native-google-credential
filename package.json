@@ -1,0 +1,30 @@
+{
+  "name": "react-native-google-credential",
+  "version": "0.1.0",
+  "private": true,
+  "description": "React Native-first Google credential sign-in package with Expo support.",
+  "homepage": "https://github.com/moussa32/react-native-google-credential#readme",
+  "bugs": {
+    "url": "https://github.com/moussa32/react-native-google-credential/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moussa32/react-native-google-credential.git"
+  },
+  "license": "MIT",
+  "author": "Moussa Ibrahim",
+  "scripts": {
+    "docs:build": "pnpm --filter docs build",
+    "docs:dev": "pnpm --filter docs dev",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*",
+    "docs"
+  ],
+  "packageManager": "pnpm@10.32.1+sha512.a706938f0e89ac1456b6563eab4edf1d1faf3368d1191fc5c59790e96dc918e4456ab2e67d613de1043d2e8c81f87303e6b40d4ffeca9df15ef1ad567348f2be"
+}

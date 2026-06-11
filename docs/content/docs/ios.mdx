@@ -1,0 +1,57 @@
+---
+title: iOS
+description: GoogleSignIn setup, GIDConfiguration, URL schemes, and credential fallback order.
+---
+
+## Native implementation
+
+iOS uses the GoogleSignIn SDK.
+
+Before sign-in, the package creates:
+
+```swift
+GIDConfiguration(clientID: iosClientId, serverClientID: webClientId)
+```
+
+`GID` is Google's prefix for the iOS Sign-In SDK types. For example:
+
+- `GIDSignIn` is the sign-in manager.
+- `GIDConfiguration` holds OAuth client configuration.
+- `GIDGoogleUser` is the signed-in user object.
+
+## Client IDs
+
+`clientID` is the iOS OAuth client ID.
+
+`serverClientID` is Google's SDK name for the OAuth Web client ID. The package
+public API calls it `webClientId` because that is the actual credential you
+provide.
+
+## iOS client ID lookup order
+
+If `iosClientId` is not passed, the native module tries:
+
+1. `GIDClientID` in `Info.plist`.
+2. `CLIENT_ID` from bundled `GoogleService-Info.plist`.
+
+If no iOS client ID is available, sign-in fails before opening Google.
+
+## URL scheme
+
+iOS must be able to return from Google to your app. Register the reversed iOS
+client ID as a URL scheme:
+
+```text
+com.googleusercontent.apps.<reversed-ios-client-id>
+```
+
+The Expo config plugin can derive this from `iosClientId` when the client ID has
+the standard `*.apps.googleusercontent.com` format.
+
+## Clear credential state
+
+On iOS, `clearGoogleCredentialState()` calls:
+
+```swift
+GIDSignIn.sharedInstance.signOut()
+```

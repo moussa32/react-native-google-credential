@@ -1,0 +1,66 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+lib/
+dist/
+build/
+coverage/
+.turbo/
+.nx/
+
+# React Native / Expo
+android/.gradle/
+android/build/
+android/app/build/
+ios/Pods/
+ios/build/
+.expo/
+.expo-shared/
+web-build/
+
+# Native build artifacts
+*.apk
+*.aab
+*.ipa
+*.xcarchive
+*.hprof
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.keystore
+*.jks
+*.p8
+*.p12
+*.mobileprovision
+GoogleService-Info.plist
+google-services.json
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Docs output
+docs/.next/
+docs/out/
+docs/build/
+.docusaurus/
+IMPLEMENTATION.md
+
+# Package manager
+package-lock.json
+yarn.lock

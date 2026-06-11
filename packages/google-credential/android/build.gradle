@@ -1,0 +1,25 @@
+plugins {
+  id 'com.android.library'
+  id 'org.jetbrains.kotlin.android'
+  id 'com.facebook.react'
+}
+
+group = 'com.pricava'
+version = '0.1.0'
+
+android {
+  namespace "com.pricava.googlecredential"
+
+  defaultConfig {
+    versionCode 1
+    versionName "0.1.0"
+  }
+}
+
+dependencies {
+  implementation "com.facebook.react:react-android"
+  implementation "androidx.credentials:credentials:1.6.0-beta03"
+  implementation "androidx.credentials:credentials-play-services-auth:1.6.0-beta03"
+  implementation "com.google.android.libraries.identity.googleid:googleid:1.1.1"
+  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2"
+}
