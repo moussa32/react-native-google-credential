@@ -3,9 +3,9 @@ node_modules/
 .pnpm-store/
 
 # Build outputs
-lib/
-dist/
-build/
+/lib/
+/dist/
+/build/
 coverage/
 .turbo/
 .nx/
