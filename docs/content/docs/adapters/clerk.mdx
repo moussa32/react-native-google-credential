@@ -1,0 +1,105 @@
+---
+title: Clerk
+description: Authenticate Google ID tokens with Clerk.
+---
+
+## Provider configuration
+
+In Clerk, enable Google as a social connection:
+
+```text
+Clerk Dashboard -> SSO connections -> Google
+```
+
+For production, configure the Google connection with your own OAuth Web client
+ID and secret. The Web client ID should match the `webClientId` you pass to this
+package.
+
+## Native Google sign-in with Clerk sessions
+
+Clerk's direct Expo social auth flow typically uses a browser-based OAuth
+session and redirects back to your app.
+
+The Clerk adapter gives your app a platform-native Google sign-in experience
+before creating the Clerk session:
+
+- Android can use the platform Credential Manager Google ID credential flow.
+- iOS can use native Google Sign-In.
+- Web can use Google Identity Services.
+
+Users get a familiar Google account picker on each platform, while Clerk still
+handles the account, session, and user management layer.
+
+## Adapter helper
+
+The package includes an adapter factory:
+
+```ts
+import { createClerkGoogleAuthAdapter } from '@pricava/react-native-google-credential/adapters';
+```
+
+Pass the Clerk instance methods that handle Google One Tap ID tokens:
+
+```ts
+const signIn = createClerkGoogleAuthAdapter({
+  credentialOptions: {
+    webClientId,
+    iosClientId,
+  },
+  authenticateWithGoogleOneTap: clerk.authenticateWithGoogleOneTap,
+  handleGoogleOneTapCallback: clerk.handleGoogleOneTapCallback,
+  callbackOptions: {
+    signInFallbackRedirectUrl: '/',
+  },
+});
+
+await signIn();
+```
+
+The adapter requests a Google ID token from the native or web credential flow,
+then passes that token to Clerk:
+
+```ts
+await clerk.authenticateWithGoogleOneTap({
+  token: idToken,
+});
+```
+
+If you do not pass `handleGoogleOneTapCallback`, the adapter returns the result
+from `authenticateWithGoogleOneTap` so your app can complete the Clerk flow
+manually.
+
+## Expo example
+
+```tsx
+import { useClerk } from '@clerk/clerk-expo';
+import { createClerkGoogleAuthAdapter } from '@pricava/react-native-google-credential/adapters';
+
+export function GoogleButton() {
+  const clerk = useClerk();
+
+  const onPress = async () => {
+    const signIn = createClerkGoogleAuthAdapter({
+      credentialOptions: {
+        webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID!,
+        iosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
+      },
+      authenticateWithGoogleOneTap: clerk.authenticateWithGoogleOneTap,
+      handleGoogleOneTapCallback: clerk.handleGoogleOneTapCallback,
+      callbackOptions: {
+        signInFallbackRedirectUrl: '/',
+      },
+    });
+
+    await signIn();
+  };
+
+  return <Button title="Continue with Google" onPress={onPress} />;
+}
+```
+
+## Notes
+
+Clerk also provides direct Expo social auth helpers for browser-based OAuth
+flows. This adapter is designed for apps that want native Google sign-in UX with
+Clerk as the authentication backend.
