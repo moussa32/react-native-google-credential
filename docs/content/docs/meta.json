@@ -9,10 +9,9 @@
     "ios",
     "web",
     "expo",
-    "supabase",
+    "adapters",
     "nonce-and-security",
     "troubleshooting",
-    "migration",
     "publishing"
   ]
 }

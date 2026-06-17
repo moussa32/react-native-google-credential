@@ -7,9 +7,43 @@ description: Install the package, configure Google OAuth clients, and request a 
 
 Install the package in your React Native or Expo development-build app:
 
+<Tabs defaultValue="npm">
+  <TabsList>
+    <TabsTrigger value="npm">
+      <PackageManagerLabel icon="/package-managers/npm.svg" name="npm" />
+    </TabsTrigger>
+    <TabsTrigger value="yarn">
+      <PackageManagerLabel icon="/package-managers/yarn.svg" name="Yarn" />
+    </TabsTrigger>
+    <TabsTrigger value="pnpm">
+      <PackageManagerLabel icon="/package-managers/pnpm.svg" name="pnpm" />
+    </TabsTrigger>
+  </TabsList>
+
+  <Tab value="npm">
+
+```bash
+npm install @pricava/react-native-google-credential
+```
+
+  </Tab>
+
+  <Tab value="yarn">
+
+```bash
+yarn add @pricava/react-native-google-credential
+```
+
+  </Tab>
+
+  <Tab value="pnpm">
+
 ```bash
 pnpm add @pricava/react-native-google-credential
 ```
+
+  </Tab>
+</Tabs>
 
 The package contains native code, so Expo Go is not supported. Use a custom
 development build or a prebuilt/native React Native app.
