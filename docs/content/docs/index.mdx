@@ -47,5 +47,8 @@ const credential = await signInWithGoogleCredential({
 
 This package is React Native-first. Android and iOS use a React Native
 TurboModule/native module, and Expo development builds use that same native
-module through React Native autolinking. Expo Go is not expected to work because
-the package needs native code.
+module through React Native autolinking.
+
+Expo's web target uses the package's web implementation. To test Android
+Credential Manager or native Google Sign-In on iOS, create a development build;
+the Expo Go native app cannot load custom native modules.

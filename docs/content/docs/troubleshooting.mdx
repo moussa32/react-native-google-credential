@@ -56,4 +56,11 @@ debug, release, and Play app signing fingerprints to Google/Firebase.
 Expo web only exercises the web implementation. Device builds need native setup
 and a rebuilt app.
 
-Use a development build, not Expo Go.
+The Expo Go native app cannot load the package's custom native module. Create an
+Android development build to test Google Credential Manager:
+
+```bash
+npx expo run:android
+```
+
+Use `npx expo start --web` to continue testing the web implementation.

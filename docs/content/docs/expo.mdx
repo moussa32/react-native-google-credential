@@ -5,8 +5,19 @@ description: Expo development builds, config plugin usage, and native module sup
 
 ## Expo support
 
-This package contains native code. Use Expo development builds or prebuild.
-Expo Go is not expected to work.
+When you run an Expo project on the web, the package uses its web implementation
+with Google Identity Services.
+
+The Expo Go native app cannot load this package's custom Android or iOS module.
+To test Android Credential Manager, create and install an Android development
+build:
+
+```bash
+npx expo run:android
+```
+
+You can also use an EAS development build. Use `npx expo start --web` when you
+only need to test the web implementation.
 
 ## Config plugin
 

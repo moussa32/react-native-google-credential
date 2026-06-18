@@ -45,8 +45,10 @@ pnpm add @pricava/react-native-google-credential
   </Tab>
 </Tabs>
 
-The package contains native code, so Expo Go is not supported. Use a custom
-development build or a prebuilt/native React Native app.
+Expo projects running on the web use the package's Google Identity Services web
+implementation. To test Android Credential Manager or native Google Sign-In on
+iOS, use an Expo development build or a prebuilt/native React Native app. The
+Expo Go native app cannot load the package's custom native modules.
 
 ## Required Google clients
 
