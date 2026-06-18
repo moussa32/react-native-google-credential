@@ -1,0 +1,168 @@
+---
+title: Firebase Auth
+description: Sign in to Firebase Auth with native Google credentials.
+---
+
+## Native Google sign-in for Firebase
+
+Firebase Auth can create a session from a Google credential, but React Native
+Firebase does not ship the Google sign-in UI. Their social auth docs leave the
+Google OAuth flow to the app, then use `GoogleAuthProvider.credential()` and
+`signInWithCredential()` once an ID token is available.
+
+The Firebase adapter fills that gap with the same platform-native Google
+credential flow used by the rest of this package:
+
+- Android can use Credential Manager.
+- iOS can use native Google Sign-In.
+- Web can use Google Identity Services.
+
+The adapter collects a Google ID token, turns it into a Firebase Google
+credential, and signs in with Firebase Auth.
+
+## Provider configuration
+
+In Firebase Console, enable Google:
+
+```text
+Authentication -> Sign-in method -> Google
+```
+
+For Android, make sure each app signing certificate fingerprint is registered in
+Firebase or Google Cloud. For iOS, include the Firebase config file and URL
+scheme setup required by your app.
+
+## Install
+
+Install React Native Firebase before importing its adapter:
+
+```bash
+npm install @react-native-firebase/app @react-native-firebase/auth
+```
+
+## Plug-and-play integration
+
+Use `createFirebaseGoogleAuth` for the standard React Native Firebase
+integration. Pass the Firebase Auth instance directly:
+
+Use this approach when:
+
+- You want a standard Google sign-in with Firebase Auth.
+- You want Firebase credential creation handled automatically.
+- You use the normal `signInWithCredential()` flow.
+- You want the shortest setup with React Native Firebase.
+
+```ts
+import { getAuth } from '@react-native-firebase/auth';
+import { createFirebaseGoogleAuth } from '@pricava/react-native-google-credential/adapters/firebase';
+
+const auth = getAuth();
+
+const signInWithGoogle = createFirebaseGoogleAuth({
+  auth,
+  webClientId,
+  iosClientId,
+});
+
+const userCredential = await signInWithGoogle();
+```
+
+The adapter creates the Firebase Google credential and calls
+`signInWithCredential()` internally.
+
+### Expo example
+
+```tsx
+import { useMemo } from 'react';
+import { Button } from 'react-native';
+import { getAuth } from '@react-native-firebase/auth';
+import { createFirebaseGoogleAuth } from '@pricava/react-native-google-credential/adapters/firebase';
+
+export function GoogleButton() {
+  const signInWithGoogle = useMemo(
+    () =>
+      createFirebaseGoogleAuth({
+        auth: getAuth(),
+        webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID!,
+        iosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
+      }),
+    [],
+  );
+
+  return (
+    <Button
+      title="Continue with Google"
+      onPress={() => signInWithGoogle()}
+    />
+  );
+}
+```
+
+## Custom integration
+
+Use `createFirebaseGoogleAuthAdapter` when you need to control Firebase
+credential creation or the operation performed with that credential:
+
+Use this approach when:
+
+- You want to link Google to an existing Firebase user.
+- You need analytics or custom processing around Firebase sign-in.
+- You want to use a different Firebase credential operation.
+- You need control over credential creation and the returned result.
+
+```ts
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithCredential,
+} from '@react-native-firebase/auth';
+import { createFirebaseGoogleAuthAdapter } from '@pricava/react-native-google-credential/adapters/firebase';
+
+const auth = getAuth();
+
+const signInWithGoogle = createFirebaseGoogleAuthAdapter({
+  credentialOptions: {
+    webClientId,
+    iosClientId,
+  },
+  createGoogleCredential: (idToken) =>
+    GoogleAuthProvider.credential(idToken),
+  signInWithCredential: async (credential) => {
+    analytics.track('firebase_google_sign_in_started');
+
+    const userCredential = await signInWithCredential(auth, credential);
+
+    analytics.identify(userCredential.user.uid);
+    return userCredential;
+  },
+});
+
+const userCredential = await signInWithGoogle();
+```
+
+The callback factory can also perform a different Firebase credential operation,
+such as linking Google to the current user:
+
+```ts
+const linkGoogleAccount = createFirebaseGoogleAuthAdapter({
+  credentialOptions: {
+    webClientId,
+    iosClientId,
+  },
+  createGoogleCredential: GoogleAuthProvider.credential,
+  signInWithCredential: async (credential) => {
+    const user = auth.currentUser;
+
+    if (!user) {
+      throw new Error('A Firebase user must be signed in.');
+    }
+
+    return user.linkWithCredential(credential);
+  },
+});
+
+const linkedUser = await linkGoogleAccount();
+```
+
+Firebase receives only the Google ID token-derived credential. Firebase still
+owns the Firebase user, session, auth state listeners, and token refresh.

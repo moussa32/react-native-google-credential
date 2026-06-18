@@ -11,6 +11,20 @@ export type SupabaseGoogleAuthAdapterOptions<TResult> = {
   exchangeGoogleIdToken: SupabaseGoogleIdTokenExchange<TResult>;
 };
 
+export type SupabaseAuthClient<TResult> = {
+  auth: {
+    signInWithIdToken(input: {
+      provider: "google";
+      token: string;
+      nonce: string;
+    }): Promise<TResult>;
+  };
+};
+
+export type SupabaseGoogleAuthOptions<TResult> = GoogleCredentialOptions & {
+  supabase: SupabaseAuthClient<TResult>;
+};
+
 export function createSupabaseGoogleAuthAdapter<TResult>({
   credentialOptions,
   exchangeGoogleIdToken,
@@ -25,4 +39,19 @@ export function createSupabaseGoogleAuthAdapter<TResult>({
         }),
     });
   };
+}
+
+export function createSupabaseGoogleAuth<TResult>({
+  supabase,
+  ...credentialOptions
+}: SupabaseGoogleAuthOptions<TResult>) {
+  return createSupabaseGoogleAuthAdapter({
+    credentialOptions,
+    exchangeGoogleIdToken: ({ idToken, nonce }) =>
+      supabase.auth.signInWithIdToken({
+        provider: "google",
+        token: idToken,
+        nonce,
+      }),
+  });
 }

@@ -1,4 +1,5 @@
 {
   "title": "Adapters",
-  "pages": ["index", "supabase", "clerk"]
+  "pagesIndex": "index",
+  "pages": ["supabase", "clerk", "firebase"]
 }

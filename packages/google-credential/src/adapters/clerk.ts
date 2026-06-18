@@ -29,6 +29,32 @@ export type ClerkGoogleAuthAdapterOptions<
   callbackOptions?: TCallbackOptions;
 };
 
+export type ClerkGoogleAuthClient<
+  TAuthenticateResult,
+  TResult = TAuthenticateResult,
+  TCallbackOptions = unknown,
+> = {
+  authenticateWithGoogleOneTap: ClerkGoogleOneTapAuthentication<TAuthenticateResult>;
+  handleGoogleOneTapCallback?: ClerkGoogleOneTapCallback<
+    TAuthenticateResult,
+    TResult,
+    TCallbackOptions
+  >;
+};
+
+export type ClerkGoogleAuthOptions<
+  TAuthenticateResult,
+  TResult = TAuthenticateResult,
+  TCallbackOptions = unknown,
+> = GoogleCredentialOptions & {
+  clerk: ClerkGoogleAuthClient<
+    TAuthenticateResult,
+    TResult,
+    TCallbackOptions
+  >;
+  callbackOptions?: TCallbackOptions;
+};
+
 export function createClerkGoogleAuthAdapter<
   TAuthenticateResult,
   TResult = TAuthenticateResult,
@@ -59,4 +85,26 @@ export function createClerkGoogleAuthAdapter<
       },
     });
   };
+}
+
+export function createClerkGoogleAuth<
+  TAuthenticateResult,
+  TResult = TAuthenticateResult,
+  TCallbackOptions = unknown,
+>({
+  clerk,
+  callbackOptions,
+  ...credentialOptions
+}: ClerkGoogleAuthOptions<
+  TAuthenticateResult,
+  TResult,
+  TCallbackOptions
+>) {
+  return createClerkGoogleAuthAdapter({
+    credentialOptions,
+    authenticateWithGoogleOneTap:
+      clerk.authenticateWithGoogleOneTap.bind(clerk),
+    handleGoogleOneTapCallback: clerk.handleGoogleOneTapCallback?.bind(clerk),
+    callbackOptions,
+  });
 }

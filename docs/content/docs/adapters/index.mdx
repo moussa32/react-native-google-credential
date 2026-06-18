@@ -6,8 +6,50 @@ description: Integrate Google credentials with third-party auth and backend prov
 Adapters help connect Google ID tokens from this package to third-party
 authentication and backend providers.
 
-The core package only acquires the Google credential. Each adapter documents how
-to exchange or forward that credential to a provider-specific API.
+Each provider supports two integration styles:
+
+## Plug-and-play integration
+
+Pass the provider client and Google client IDs. The adapter performs the standard
+provider exchange internally.
+
+```ts
+const signInWithGoogle = createProviderGoogleAuth({
+  providerClient,
+  webClientId,
+  iosClientId,
+});
+```
+
+Use this approach when:
+
+- You want the fastest path to a working integration.
+- Your app connects directly to the provider SDK.
+- You want the package to manage the standard token exchange.
+- You do not need custom logic between Google sign-in and provider sign-in.
+
+## Custom integration
+
+Pass the Google options and the provider operations separately.
+
+```ts
+const signInWithGoogle = createProviderGoogleAuthAdapter({
+  credentialOptions: {
+    webClientId,
+    iosClientId,
+  },
+  exchangeCredential: async ({ idToken, nonce }) => {
+    // Exchange the credential with your provider or backend.
+  },
+});
+```
+
+Use this approach when:
+
+- Google credentials must pass through your backend.
+- You need analytics, logging, or additional validation during sign-in.
+- You want to link an identity instead of signing in.
+- Your provider setup differs from the standard integration.
 
 <Cards>
   <Card
@@ -19,5 +61,10 @@ to exchange or forward that credential to a provider-specific API.
     title="Clerk"
     href="/docs/adapters/clerk"
     icon={<BrandIcon alt="Clerk" src="/adapters/clerk.svg" />}
+  />
+  <Card
+    title="Firebase Auth"
+    href="/docs/adapters/firebase"
+    icon={<BrandIcon alt="Firebase" src="/adapters/firebase.svg" />}
   />
 </Cards>

@@ -25,6 +25,18 @@
       "react-native": "./src/adapters/index.ts",
       "default": "./src/adapters/index.ts"
     },
+    "./adapters/clerk": {
+      "react-native": "./src/adapters/clerk.ts",
+      "default": "./src/adapters/clerk.ts"
+    },
+    "./adapters/firebase": {
+      "react-native": "./src/adapters/firebase.ts",
+      "default": "./src/adapters/firebase.ts"
+    },
+    "./adapters/supabase": {
+      "react-native": "./src/adapters/supabase.ts",
+      "default": "./src/adapters/supabase.ts"
+    },
     "./app.plugin": "./app.plugin.js",
     "./package.json": "./package.json"
   },
@@ -61,10 +73,17 @@
   },
   "dependencies": {},
   "peerDependencies": {
+    "@react-native-firebase/auth": "^24.1.1",
     "react": "*",
     "react-native": "*"
   },
+  "peerDependenciesMeta": {
+    "@react-native-firebase/auth": {
+      "optional": true
+    }
+  },
   "devDependencies": {
+    "@react-native-firebase/auth": "^24.1.1",
     "typescript": "^6.0.3"
   }
 }

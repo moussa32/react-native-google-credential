@@ -30,76 +30,125 @@ before creating the Clerk session:
 Users get a familiar Google account picker on each platform, while Clerk still
 handles the account, session, and user management layer.
 
-## Adapter helper
+## Plug-and-play integration
 
-The package includes an adapter factory:
+Use `createClerkGoogleAuth` for the standard Clerk integration. Pass the Clerk
+instance directly:
+
+Use this approach when:
+
+- You want native Google sign-in backed by Clerk sessions.
+- You use Clerk's standard Google One Tap authentication flow.
+- You want authentication and callback handling completed automatically.
+- You want the shortest integration with the Clerk client.
 
 ```ts
-import { createClerkGoogleAuthAdapter } from '@pricava/react-native-google-credential/adapters';
-```
+import { createClerkGoogleAuth } from '@pricava/react-native-google-credential/adapters/clerk';
 
-Pass the Clerk instance methods that handle Google One Tap ID tokens:
-
-```ts
-const signIn = createClerkGoogleAuthAdapter({
-  credentialOptions: {
-    webClientId,
-    iosClientId,
-  },
-  authenticateWithGoogleOneTap: clerk.authenticateWithGoogleOneTap,
-  handleGoogleOneTapCallback: clerk.handleGoogleOneTapCallback,
+const signInWithGoogle = createClerkGoogleAuth({
+  clerk,
+  webClientId,
+  iosClientId,
   callbackOptions: {
     signInFallbackRedirectUrl: '/',
   },
 });
 
-await signIn();
+await signInWithGoogle();
 ```
 
 The adapter requests a Google ID token from the native or web credential flow,
-then passes that token to Clerk:
+passes it to `clerk.authenticateWithGoogleOneTap()`, and completes the callback
+through `clerk.handleGoogleOneTapCallback()` when that method is available.
 
-```ts
-await clerk.authenticateWithGoogleOneTap({
-  token: idToken,
-});
-```
-
-If you do not pass `handleGoogleOneTapCallback`, the adapter returns the result
-from `authenticateWithGoogleOneTap` so your app can complete the Clerk flow
-manually.
-
-## Expo example
+### Expo example
 
 ```tsx
+import { useMemo } from 'react';
+import { Button } from 'react-native';
 import { useClerk } from '@clerk/clerk-expo';
-import { createClerkGoogleAuthAdapter } from '@pricava/react-native-google-credential/adapters';
+import { createClerkGoogleAuth } from '@pricava/react-native-google-credential/adapters/clerk';
 
 export function GoogleButton() {
   const clerk = useClerk();
-
-  const onPress = async () => {
-    const signIn = createClerkGoogleAuthAdapter({
-      credentialOptions: {
+  const signInWithGoogle = useMemo(
+    () =>
+      createClerkGoogleAuth({
+        clerk,
         webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID!,
         iosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
-      },
-      authenticateWithGoogleOneTap: clerk.authenticateWithGoogleOneTap,
-      handleGoogleOneTapCallback: clerk.handleGoogleOneTapCallback,
-      callbackOptions: {
-        signInFallbackRedirectUrl: '/',
-      },
-    });
+        callbackOptions: {
+          signInFallbackRedirectUrl: '/',
+        },
+      }),
+    [clerk],
+  );
 
-    await signIn();
-  };
-
-  return <Button title="Continue with Google" onPress={onPress} />;
+  return (
+    <Button
+      title="Continue with Google"
+      onPress={() => signInWithGoogle()}
+    />
+  );
 }
 ```
 
-## Notes
+## Custom integration
+
+Use `createClerkGoogleAuthAdapter` when you need separate control over Clerk
+authentication and callback handling:
+
+Use this approach when:
+
+- You need analytics or logging around Clerk authentication.
+- You want custom redirect or fallback behavior.
+- Your app handles Clerk's authentication result manually.
+- You need to wrap or replace part of the standard Clerk flow.
+
+```ts
+import { createClerkGoogleAuthAdapter } from '@pricava/react-native-google-credential/adapters/clerk';
+
+const signInWithGoogle = createClerkGoogleAuthAdapter({
+  credentialOptions: {
+    webClientId,
+    iosClientId,
+  },
+  authenticateWithGoogleOneTap: ({ token }) => {
+    analytics.track('clerk_google_auth_started');
+
+    return clerk.authenticateWithGoogleOneTap({ token });
+  },
+  handleGoogleOneTapCallback: (result, options) => {
+    analytics.track('clerk_google_auth_completed');
+
+    return clerk.handleGoogleOneTapCallback(result, options);
+  },
+  callbackOptions: {
+    signInFallbackRedirectUrl: '/',
+  },
+});
+
+await signInWithGoogle();
+```
+
+The callback handler is optional. Without it, the factory returns Clerk's
+authentication result so your application can complete the flow:
+
+```ts
+const authenticateWithGoogle = createClerkGoogleAuthAdapter({
+  credentialOptions: {
+    webClientId,
+    iosClientId,
+  },
+  authenticateWithGoogleOneTap: ({ token }) =>
+    clerk.authenticateWithGoogleOneTap({ token }),
+});
+
+const authenticationResult = await authenticateWithGoogle();
+
+await completeCustomClerkFlow(authenticationResult);
+```
 
 Clerk also provides direct Expo social auth helpers for browser-based OAuth
-flows. This adapter is designed for apps that want native Google sign-in UX with
-Clerk as the authentication backend.
+flows. These adapters are designed for apps that want native Google sign-in UX
+with Clerk as the authentication backend.

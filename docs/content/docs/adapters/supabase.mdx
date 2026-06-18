@@ -18,49 +18,121 @@ Use:
 
 Never put the Web client secret in your app.
 
-## Adapter helper
+## Install
 
-The package includes an adapter factory:
+Install the Supabase client alongside this package:
 
-```ts
-import { createSupabaseGoogleAuthAdapter } from '@pricava/react-native-google-credential/adapters';
+```bash
+npm install @supabase/supabase-js
 ```
 
-The adapter accepts a Google credential config and a function that exchanges the
-Google ID token with Supabase:
+## Plug-and-play integration
+
+Use `createSupabaseGoogleAuth` for the standard Supabase integration. Pass your
+existing client and Google client IDs:
+
+Use this approach when:
+
+- Your app connects directly to Supabase Auth.
+- You want the shortest setup with sensible defaults.
+- You want the adapter to manage the nonce and token exchange.
+- You do not need a custom authentication backend.
 
 ```ts
-const signIn = createSupabaseGoogleAuthAdapter({
+import { createClient } from '@supabase/supabase-js';
+import { createSupabaseGoogleAuth } from '@pricava/react-native-google-credential/adapters/supabase';
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+const signInWithGoogle = createSupabaseGoogleAuth({
+  supabase,
+  webClientId,
+  iosClientId,
+});
+
+const result = await signInWithGoogle();
+
+if (result.error) {
+  throw result.error;
+}
+
+const session = result.data.session;
+```
+
+The adapter acquires the Google ID token, manages the OIDC nonce, and calls
+`supabase.auth.signInWithIdToken()` with the Google provider.
+
+Create `signInWithGoogle` once outside the button handler, then call it from your
+UI.
+
+## Custom integration
+
+Use `createSupabaseGoogleAuthAdapter` when you need to control how the Google ID
+token reaches Supabase or route it through your backend:
+
+Use this approach when:
+
+- Your backend exchanges the Google credential with Supabase.
+- You need custom validation before creating the Supabase session.
+- You want to add analytics, logging, or error translation.
+- You need full control over the response returned to your app.
+
+```ts
+import { createSupabaseGoogleAuthAdapter } from '@pricava/react-native-google-credential/adapters/supabase';
+
+type AuthResponse = {
+  accessToken: string;
+  refreshToken: string;
+};
+
+const signInWithGoogle = createSupabaseGoogleAuthAdapter<AuthResponse>({
   credentialOptions: {
     webClientId,
     iosClientId,
   },
   exchangeGoogleIdToken: async ({ idToken, nonce }) => {
-    return signInWithSupabaseGoogleIdToken({ idToken, nonce });
+    const response = await fetch(`${apiUrl}/auth/google/supabase`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        idToken,
+        nonce,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Supabase Google sign-in failed.');
+    }
+
+    return response.json() as Promise<AuthResponse>;
   },
 });
 
-const session = await signIn();
+const tokens = await signInWithGoogle();
 ```
 
-## Supabase token exchange
+The factory still handles Google credential collection and nonce generation.
+Only the exchange callback is owned by your application.
 
-Supabase accepts Google ID tokens through:
+You can also use the callback factory with the Supabase client directly when
+you need extra logic around the exchange:
 
-```text
-/auth/v1/token?grant_type=id_token
+```ts
+const signInWithGoogle = createSupabaseGoogleAuthAdapter({
+  credentialOptions: {
+    webClientId,
+    iosClientId,
+  },
+  exchangeGoogleIdToken: async ({ idToken, nonce }) => {
+    analytics.track('google_auth_exchange_started');
+
+    return supabase.auth.signInWithIdToken({
+      provider: 'google',
+      token: idToken,
+      nonce,
+    });
+  },
+});
 ```
-
-with:
-
-```json
-{
-  "provider": "google",
-  "id_token": "...",
-  "nonce": "..."
-}
-```
-
-The exact implementation belongs in your app or backend integration layer. The
-package core only acquires the Google credential.
-
