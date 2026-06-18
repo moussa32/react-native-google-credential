@@ -15,6 +15,27 @@ yarn dev
 
 Open http://localhost:3000 with your browser to see the result.
 
+## Google Analytics
+
+Create a Google Analytics 4 web data stream and copy its measurement ID. It
+starts with `G-`.
+
+Set the following environment variable:
+
+```bash
+NEXT_PUBLIC_GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX
+```
+
+For Vercel, add it under:
+
+```text
+Project Settings -> Environment Variables
+```
+
+Enable Enhanced Measurement and its browser-history page-change option in
+Google Analytics so client-side documentation navigation is recorded. Analytics
+is not loaded when the environment variable is missing.
+
 ## Explore
 
 In the project, you can see:
