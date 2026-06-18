@@ -1,6 +1,6 @@
 {
   "name": "@pricava/react-native-google-credential",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "React Native-first Google credential sign-in with Expo support.",
   "license": "MIT",
   "author": "Moussa Ibrahim",
