@@ -1,15 +1,20 @@
 {
   "title": "React Native Google Credential",
+  "icon": "Package",
   "pages": [
+    "---[Compass]Guides---",
     "index",
     "getting-started",
-    "api-reference",
     "configuration",
+    "---[MonitorSmartphone]Platforms---",
     "android",
     "ios",
     "web",
     "expo",
-    "adapters",
+    "---[Blocks]Integrations---",
+    "...adapters",
+    "---[ShieldCheck]Reference---",
+    "api-reference",
     "nonce-and-security",
     "troubleshooting"
   ]

@@ -1,13 +1,29 @@
 import { docs } from 'collections/server';
 import { loader } from 'fumadocs-core/source';
-import { lucideIconsPlugin } from 'fumadocs-core/source/lucide-icons';
+import { icons } from 'lucide-react';
+import { createElement } from 'react';
 import { docsContentRoute, docsImageRoute, docsRoute } from './shared';
 
 // See https://fumadocs.dev/docs/headless/source-api for more info
 export const source = loader({
   baseUrl: docsRoute,
   source: docs.toFumadocsSource(),
-  plugins: [lucideIconsPlugin()],
+  icon(icon) {
+    if (!icon) return;
+
+    if (icon.startsWith('/')) {
+      return createElement('img', {
+        alt: '',
+        'aria-hidden': true,
+        className: 'size-4 shrink-0',
+        src: icon,
+      });
+    }
+
+    if (icon in icons) {
+      return createElement(icons[icon as keyof typeof icons]);
+    }
+  },
 });
 
 export function getPageImage(page: (typeof source)['$inferPage']) {
