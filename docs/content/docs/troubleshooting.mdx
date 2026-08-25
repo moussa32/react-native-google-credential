@@ -35,9 +35,11 @@ using React Native Firebase 25 or 26.
 
 Upgrade this package to `1.0.1` or newer, then make sure
 `@react-native-firebase/app` and `@react-native-firebase/auth` use the same
-version. Supported Auth versions are `24.1.1` through `26.x`. Regenerate the
-lockfile after aligning the versions. Avoid `--force` and `legacy-peer-deps` as
-permanent fixes because they bypass peer compatibility checks.
+version. Version `1.0.2` expands the supported Auth versions to `23.8.8`,
+`24.0.x`, `24.1.1`, `25.x`, and `26.x`. React Native Firebase `24.1.0` remains
+excluded because of its upstream iOS startup regression. Regenerate the lockfile
+after aligning the versions. Avoid `--force` and `legacy-peer-deps` as permanent
+fixes because they bypass peer compatibility checks.
 
 ## iOS: Firebase Swift pods do not define modules
 
@@ -45,7 +47,7 @@ This CocoaPods error comes from React Native Firebase's iOS linkage, not from
 the Google credential pod. Do not add `use_modular_headers!` or Firebase pods
 manually.
 
-- With React Native Firebase 24 or 25, use its documented
+- With React Native Firebase 23, 24, or 25, use its documented
   CocoaPods/static-framework configuration through `expo-build-properties`.
 - With React Native Firebase 26, use its default Swift Package Manager/dynamic
   framework setup on supported React Native versions. If you intentionally opt

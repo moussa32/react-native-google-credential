@@ -56,11 +56,12 @@ configuration.
 
 The Firebase adapter is optional. When you use it, configure React Native
 Firebase separately and keep its App and Auth packages on the same version.
-This package supports React Native Firebase Auth from `24.1.1` through `26.x`.
+This package supports Auth `23.8.8`, `24.0.x`, `24.1.1`, `25.x`, and `26.x`.
+Version `24.1.0` is excluded because of its upstream iOS startup regression.
 
-React Native Firebase 24 and 25 use its CocoaPods/static-framework Expo setup.
-React Native Firebase 26 uses Swift Package Manager and dynamic frameworks by
-default on supported React Native versions. Follow the
+React Native Firebase 23, 24, and 25 use its CocoaPods/static-framework Expo
+setup. React Native Firebase 26 uses Swift Package Manager and dynamic
+frameworks by default on supported React Native versions. Follow the
 [React Native Firebase Expo installation guide](https://rnfirebase.io/#installation-for-expo-projects)
 for the exact version in your project; this package does not modify Firebase's
 Podfile linkage.

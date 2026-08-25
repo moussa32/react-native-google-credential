@@ -1,0 +1,36 @@
+---
+title: Changelog
+description: Package releases, compatibility changes, and migration notes.
+icon: ScrollText
+---
+
+## 1.0.2 - Unreleased
+
+### Changed
+
+- Expanded the optional React Native Firebase Auth peer range to support
+  `23.8.8`, `24.0.x`, `24.1.1`, `25.x`, and `26.x`.
+- Excluded React Native Firebase `24.1.0` because `24.1.1` reverted its Firebase
+  iOS SDK update to avoid an upstream startup crash.
+- Extended the Firebase and Expo documentation with the version-specific iOS
+  linkage requirements for React Native Firebase 23 through 26.
+
+## 1.0.1 - 2026-08-25
+
+### Fixed
+
+- Expanded the optional React Native Firebase Auth peer dependency from
+  `^24.1.1` to versions `24.1.1` through `26.x`.
+- Removed the adapter's dependency on the legacy `FirebaseAuthTypes` namespace
+  by deriving its public types from `signInWithCredential()`.
+- Documented the CocoaPods/static-framework setup for React Native Firebase 24
+  and 25 and the default Swift Package Manager/dynamic-framework setup for 26.
+
+## 1.0.0 - 2026-06-18
+
+### Added
+
+- Initial stable release of the cross-platform Google credential API.
+- Android Credential Manager, native iOS Google Sign-In, and Google Identity
+  Services web support.
+- Expo configuration plugin and Firebase Auth, Supabase, and Clerk adapters.

@@ -78,7 +78,8 @@ to the provider session.
 ### Firebase Auth
 
 Install matching versions of React Native Firebase App and Auth. This package
-supports React Native Firebase Auth from `24.1.1` through `26.x`.
+supports Auth `23.8.8`, `24.0.x`, `24.1.1`, `25.x`, and `26.x`. React Native
+Firebase `24.1.0` is excluded because of its upstream iOS startup regression.
 
 ```bash
 npm install @react-native-firebase/app @react-native-firebase/auth
