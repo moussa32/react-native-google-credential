@@ -77,6 +77,13 @@ to the provider session.
 
 ### Firebase Auth
 
+Install matching versions of React Native Firebase App and Auth. This package
+supports React Native Firebase Auth from `24.1.1` through `26.x`.
+
+```bash
+npm install @react-native-firebase/app @react-native-firebase/auth
+```
+
 ```ts
 import { getAuth } from "@react-native-firebase/auth";
 import { createFirebaseGoogleAuth } from "@pricava/react-native-google-credential/adapters/firebase";
@@ -87,6 +94,10 @@ const signInWithGoogle = createFirebaseGoogleAuth({
   iosClientId,
 });
 ```
+
+Expo applications must also follow React Native Firebase's native installation
+instructions. Its iOS linkage differs by major version, so use the setup for
+the exact App/Auth version installed in your application.
 
 ### Supabase
 

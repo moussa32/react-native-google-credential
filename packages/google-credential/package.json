@@ -1,6 +1,6 @@
 {
   "name": "@pricava/react-native-google-credential",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "React Native-first Google credential sign-in with Expo support.",
   "license": "MIT",
   "author": "Moussa Ibrahim",
@@ -71,9 +71,8 @@
     "lint": "echo \"TODO: add package lint\"",
     "typecheck": "tsc --noEmit"
   },
-  "dependencies": {},
   "peerDependencies": {
-    "@react-native-firebase/auth": "^24.1.1",
+    "@react-native-firebase/auth": ">=24.1.1 <27",
     "react": "*",
     "react-native": "*"
   },
@@ -83,7 +82,8 @@
     }
   },
   "devDependencies": {
-    "@react-native-firebase/auth": "^24.1.1",
+    "@react-native-firebase/app": "26.2.0",
+    "@react-native-firebase/auth": "26.2.0",
     "typescript": "^6.0.3"
   }
 }

@@ -41,6 +41,57 @@ Install React Native Firebase before importing its adapter:
 npm install @react-native-firebase/app @react-native-firebase/auth
 ```
 
+Keep `@react-native-firebase/app` and `@react-native-firebase/auth` on the same
+version. The adapter supports React Native Firebase Auth from `24.1.1` through
+`26.x`.
+
+## Expo native configuration
+
+This package's config plugin installs the Google credential module and writes
+the iOS Google client configuration. It does not configure React Native
+Firebase. Add the React Native Firebase config plugins and follow the
+[React Native Firebase Expo installation guide](https://rnfirebase.io/#installation-for-expo-projects)
+for the exact version installed in your application.
+
+The iOS linkage differs across the supported React Native Firebase releases:
+
+- React Native Firebase 24 and 25 use the CocoaPods/static-framework setup.
+- React Native Firebase 26 uses Swift Package Manager and dynamic frameworks by
+  default on supported React Native versions.
+- React Native Firebase 26 can opt out of Swift Package Manager, but its
+  CocoaPods/static setup must include the documented `disableSPM` and static
+  linking configuration.
+
+For the default React Native Firebase 26 setup, include its plugins and dynamic
+framework configuration alongside this package:
+
+```ts
+export default {
+  plugins: [
+    "@react-native-firebase/app",
+    "@react-native-firebase/auth",
+    [
+      "expo-build-properties",
+      {
+        ios: {
+          useFrameworks: "dynamic",
+        },
+      },
+    ],
+    [
+      "@pricava/react-native-google-credential",
+      { iosClientId, iosUrlScheme },
+    ],
+  ],
+};
+```
+
+For React Native Firebase 24 or 25, use `"static"` instead of `"dynamic"` and
+follow that release's CocoaPods installation instructions.
+
+Do not add Firebase pods or `use_modular_headers!` manually. Let React Native
+Firebase and `expo-build-properties` generate the supported native setup.
+
 ## Plug-and-play integration
 
 Use `createFirebaseGoogleAuth` for the standard React Native Firebase
@@ -54,8 +105,8 @@ Use this approach when:
 - You want the shortest setup with React Native Firebase.
 
 ```ts
-import { getAuth } from '@react-native-firebase/auth';
-import { createFirebaseGoogleAuth } from '@pricava/react-native-google-credential/adapters/firebase';
+import { getAuth } from "@react-native-firebase/auth";
+import { createFirebaseGoogleAuth } from "@pricava/react-native-google-credential/adapters/firebase";
 
 const auth = getAuth();
 
@@ -74,10 +125,10 @@ The adapter creates the Firebase Google credential and calls
 ### Expo example
 
 ```tsx
-import { useMemo } from 'react';
-import { Button } from 'react-native';
-import { getAuth } from '@react-native-firebase/auth';
-import { createFirebaseGoogleAuth } from '@pricava/react-native-google-credential/adapters/firebase';
+import { useMemo } from "react";
+import { Button } from "react-native";
+import { getAuth } from "@react-native-firebase/auth";
+import { createFirebaseGoogleAuth } from "@pricava/react-native-google-credential/adapters/firebase";
 
 export function GoogleButton() {
   const signInWithGoogle = useMemo(
@@ -91,10 +142,7 @@ export function GoogleButton() {
   );
 
   return (
-    <Button
-      title="Continue with Google"
-      onPress={() => signInWithGoogle()}
-    />
+    <Button title="Continue with Google" onPress={() => signInWithGoogle()} />
   );
 }
 ```
@@ -116,8 +164,8 @@ import {
   getAuth,
   GoogleAuthProvider,
   signInWithCredential,
-} from '@react-native-firebase/auth';
-import { createFirebaseGoogleAuthAdapter } from '@pricava/react-native-google-credential/adapters/firebase';
+} from "@react-native-firebase/auth";
+import { createFirebaseGoogleAuthAdapter } from "@pricava/react-native-google-credential/adapters/firebase";
 
 const auth = getAuth();
 
@@ -126,10 +174,9 @@ const signInWithGoogle = createFirebaseGoogleAuthAdapter({
     webClientId,
     iosClientId,
   },
-  createGoogleCredential: (idToken) =>
-    GoogleAuthProvider.credential(idToken),
+  createGoogleCredential: (idToken) => GoogleAuthProvider.credential(idToken),
   signInWithCredential: async (credential) => {
-    analytics.track('firebase_google_sign_in_started');
+    analytics.track("firebase_google_sign_in_started");
 
     const userCredential = await signInWithCredential(auth, credential);
 
@@ -155,7 +202,7 @@ const linkGoogleAccount = createFirebaseGoogleAuthAdapter({
     const user = auth.currentUser;
 
     if (!user) {
-      throw new Error('A Firebase user must be signed in.');
+      throw new Error("A Firebase user must be signed in.");
     }
 
     return user.linkWithCredential(credential);

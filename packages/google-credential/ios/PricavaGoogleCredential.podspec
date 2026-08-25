@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name           = "PricavaGoogleCredential"
-  s.version        = "1.0.0"
+  s.version        = "1.0.1"
   s.summary        = "React Native Google credential sign-in."
   s.description    = "React Native TurboModule support for Android Credential Manager, GoogleSignIn on iOS, and Google Identity Services on web."
   s.author         = "Pricava"

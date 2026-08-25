@@ -27,6 +27,43 @@ https://accounts.google.com/gsi/client
 
 Browser extensions, ad blockers, or corporate network rules can block it.
 
+## npm: React Native Firebase peer conflict
+
+Versions before `1.0.1` restricted the optional
+`@react-native-firebase/auth` peer to `^24.1.1`, so npm rejected applications
+using React Native Firebase 25 or 26.
+
+Upgrade this package to `1.0.1` or newer, then make sure
+`@react-native-firebase/app` and `@react-native-firebase/auth` use the same
+version. Supported Auth versions are `24.1.1` through `26.x`. Regenerate the
+lockfile after aligning the versions. Avoid `--force` and `legacy-peer-deps` as
+permanent fixes because they bypass peer compatibility checks.
+
+## iOS: Firebase Swift pods do not define modules
+
+This CocoaPods error comes from React Native Firebase's iOS linkage, not from
+the Google credential pod. Do not add `use_modular_headers!` or Firebase pods
+manually.
+
+- With React Native Firebase 24 or 25, use its documented
+  CocoaPods/static-framework configuration through `expo-build-properties`.
+- With React Native Firebase 26, use its default Swift Package Manager/dynamic
+  framework setup on supported React Native versions. If you intentionally opt
+  out of Swift Package Manager, use the complete documented `disableSPM` and
+  static-linking configuration.
+
+After changing the Expo config, regenerate the native project and rebuild:
+
+```bash
+npx expo prebuild --clean
+npx expo run:ios
+```
+
+For EAS, commit the updated Expo config and lockfile before starting a new
+build. See the
+[React Native Firebase Expo installation guide](https://rnfirebase.io/#installation-for-expo-projects)
+for the version-specific configuration.
+
 ## iOS: missing `iosClientId`
 
 iOS requires an iOS OAuth client ID. Provide `iosClientId`, write `GIDClientID`

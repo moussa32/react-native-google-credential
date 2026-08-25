@@ -1,10 +1,14 @@
 import {
   GoogleAuthProvider,
   signInWithCredential,
-  type FirebaseAuthTypes,
 } from "@react-native-firebase/auth";
 import type { GoogleCredentialOptions } from "../types";
 import { signInWithGoogleAuthProvider } from "./google-auth-provider";
+
+type FirebaseSignInWithCredential = typeof signInWithCredential;
+type FirebaseAuth = Parameters<FirebaseSignInWithCredential>[0];
+type FirebaseAuthCredential = Parameters<FirebaseSignInWithCredential>[1];
+type FirebaseUserCredential = Awaited<ReturnType<FirebaseSignInWithCredential>>;
 
 export type FirebaseGoogleCredentialFactory<TCredential> = (
   idToken: string,
@@ -21,7 +25,7 @@ export type FirebaseGoogleAuthAdapterOptions<TCredential, TResult> = {
 };
 
 export type FirebaseGoogleAuthOptions = GoogleCredentialOptions & {
-  auth: FirebaseAuthTypes.Module;
+  auth: FirebaseAuth;
 };
 
 export function createFirebaseGoogleAuthAdapter<TCredential, TResult>({
@@ -46,12 +50,11 @@ export function createFirebaseGoogleAuth({
   ...credentialOptions
 }: FirebaseGoogleAuthOptions) {
   return createFirebaseGoogleAuthAdapter<
-    FirebaseAuthTypes.AuthCredential,
-    FirebaseAuthTypes.UserCredential
+    FirebaseAuthCredential,
+    FirebaseUserCredential
   >({
     credentialOptions,
-    createGoogleCredential: (idToken) =>
-      GoogleAuthProvider.credential(idToken),
+    createGoogleCredential: (idToken) => GoogleAuthProvider.credential(idToken),
     signInWithCredential: (credential) =>
       signInWithCredential(auth, credential),
   });

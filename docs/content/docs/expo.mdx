@@ -52,12 +52,25 @@ Expo development builds use the same React Native TurboModule/native module as
 bare React Native apps. The Expo config plugin only handles iOS native
 configuration.
 
+## React Native Firebase adapter
+
+The Firebase adapter is optional. When you use it, configure React Native
+Firebase separately and keep its App and Auth packages on the same version.
+This package supports React Native Firebase Auth from `24.1.1` through `26.x`.
+
+React Native Firebase 24 and 25 use its CocoaPods/static-framework Expo setup.
+React Native Firebase 26 uses Swift Package Manager and dynamic frameworks by
+default on supported React Native versions. Follow the
+[React Native Firebase Expo installation guide](https://rnfirebase.io/#installation-for-expo-projects)
+for the exact version in your project; this package does not modify Firebase's
+Podfile linkage.
+
 ## Rebuild after config changes
 
 Any native config change requires rebuilding the app:
 
 ```bash
-npx expo prebuild
+npx expo prebuild --clean
 npx expo run:ios
 npx expo run:android
 ```
