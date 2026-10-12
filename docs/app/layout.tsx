@@ -20,6 +20,9 @@ export const metadata: Metadata = {
   authors: [{ name: 'Moussa Ibrahim' }],
   creator: 'Moussa Ibrahim',
   publisher: 'Pricava',
+  verification: {
+    google: 'xakqHvWxEf_pcPTNh2zJaEqJnNEMtFCJM012nl2Yiy0',
+  },
   robots: {
     index: true,
     follow: true,
