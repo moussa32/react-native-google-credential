@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "description": "React Native-first Google credential sign-in package with Expo support.",
-  "homepage": "https://github.com/moussa32/react-native-google-credential#readme",
+  "homepage": "https://react-native-google-credential.vercel.app",
   "bugs": {
     "url": "https://github.com/moussa32/react-native-google-credential/issues"
   },

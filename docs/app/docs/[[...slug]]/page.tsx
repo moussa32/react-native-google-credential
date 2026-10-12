@@ -11,7 +11,7 @@ import { notFound } from 'next/navigation';
 import { getMDXComponents } from '@/components/mdx';
 import type { Metadata } from 'next';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
-import { gitConfig } from '@/lib/shared';
+import { appName, docsRoute, gitConfig } from '@/lib/shared';
 
 export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   const params = await props.params;
@@ -53,11 +53,31 @@ export async function generateMetadata(props: PageProps<'/docs/[[...slug]]'>): P
   const page = source.getPage(params.slug);
   if (!page) notFound();
 
+  const isDocsIndex = page.url === docsRoute;
+  const title = isDocsIndex
+    ? 'React Native Google Credential Documentation'
+    : page.data.title;
+  const image = getPageImage(page).url;
+
   return {
-    title: page.data.title,
+    title: isDocsIndex ? { absolute: title } : title,
     description: page.data.description,
+    alternates: {
+      canonical: page.url,
+    },
     openGraph: {
-      images: getPageImage(page).url,
+      type: 'article',
+      url: page.url,
+      siteName: appName,
+      title,
+      description: page.data.description,
+      images: [image],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: page.data.description,
+      images: [image],
     },
   };
 }

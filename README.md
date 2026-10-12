@@ -233,11 +233,11 @@ Current integrations:
 
 ## Documentation
 
-- [Getting started](./docs/content/docs/getting-started.mdx)
-- [Configuration](./docs/content/docs/configuration.mdx)
-- [Expo setup](./docs/content/docs/expo.mdx)
-- [Adapters](./docs/content/docs/adapters/index.mdx)
-- [Troubleshooting](./docs/content/docs/troubleshooting.mdx)
+- [Getting started](https://react-native-google-credential.vercel.app/docs/getting-started)
+- [Configuration](https://react-native-google-credential.vercel.app/docs/configuration)
+- [Expo setup](https://react-native-google-credential.vercel.app/docs/expo)
+- [Adapters](https://react-native-google-credential.vercel.app/docs/adapters)
+- [Troubleshooting](https://react-native-google-credential.vercel.app/docs/troubleshooting)
 - [Implementation details](./packages/google-credential/IMPLEMENTATION.md)
 
 ## License

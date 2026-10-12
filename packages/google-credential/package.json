@@ -4,7 +4,7 @@
   "description": "React Native-first Google credential sign-in with Expo support.",
   "license": "MIT",
   "author": "Moussa Ibrahim",
-  "homepage": "https://github.com/moussa32/react-native-google-credential#readme",
+  "homepage": "https://react-native-google-credential.vercel.app",
   "bugs": {
     "url": "https://github.com/moussa32/react-native-google-credential/issues"
   },

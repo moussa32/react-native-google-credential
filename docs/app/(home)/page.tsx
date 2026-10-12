@@ -10,6 +10,32 @@ import {
 } from "lucide-react";
 import { ServerCodeBlock } from "fumadocs-ui/components/codeblock.rsc";
 import Link from "next/link";
+import type { Metadata } from "next";
+import { appName, siteDescription } from "@/lib/shared";
+
+export const metadata: Metadata = {
+  title: {
+    absolute: "React Native Google Credential for React Native & Expo",
+  },
+  description: siteDescription,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    url: "/",
+    siteName: appName,
+    title: "React Native Google Credential for React Native & Expo",
+    description: siteDescription,
+    images: ["/og/docs/image.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "React Native Google Credential for React Native & Expo",
+    description: siteDescription,
+    images: ["/og/docs/image.png"],
+  },
+};
 
 const platforms = [
   {

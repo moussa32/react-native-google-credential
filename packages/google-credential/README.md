@@ -168,7 +168,7 @@ Lower-level exports such as `signInAsync`, `isAvailableAsync`, and
 
 ## Documentation
 
-See the [project documentation](https://github.com/moussa32/react-native-google-credential/tree/main/docs/content/docs)
+See the [project documentation](https://react-native-google-credential.vercel.app/docs)
 for platform setup, Expo configuration, adapters, API details, and
 troubleshooting.
 
