@@ -7,8 +7,13 @@ plugins {
 group = 'com.pricava'
 version = '0.1.0'
 
+def safeExtGet(prop, fallback) {
+  rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+}
+
 android {
   namespace "com.pricava.googlecredential"
+  compileSdkVersion safeExtGet('compileSdkVersion', 35)
 
   defaultConfig {
     versionCode 1
